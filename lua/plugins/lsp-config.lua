@@ -16,11 +16,21 @@ return {
   {
     "neovim/nvim-lspconfig",
     config = function()
-      local capabilities = require("cmp_nvim_lsp").default_capabilities()
       local lspconfig = require("lspconfig")
 
       lspconfig.tsserver.setup({
-        capabilities = capabilities
+        on_attach = function(client, bufnr)
+          vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
+          
+
+          -- if client.server_capabilities.documentFormattingProvider then
+          --  vim.api.nvim_create_autocmd("BufWritePre", {
+          --    buffer = bufnr,
+          --    callback = function() vim.lsp.buf.formatting_sync() end
+          --  })
+          -- end
+        end,
+        capabilities = require('cmp_nvim_lsp').default_capabilities(),
       })
 
       vim.keymap.set('n', 'K', vim.lsp.buf.hover, {})
